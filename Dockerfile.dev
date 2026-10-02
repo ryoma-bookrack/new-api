@@ -36,7 +36,7 @@ RUN sed -i \
     && update-ca-certificates
 
 COPY --from=builder /build/new-api /
-COPY LICENSE NOTICE THIRD-PARTY-LICENSES.md /licenses/
+COPY THIRD-PARTY-LICENSES.md /licenses/
 EXPOSE 3000
 WORKDIR /data
 ENTRYPOINT ["/new-api"]

@@ -33,7 +33,7 @@ FROM harbor.ryoma.local/base/distroless/static-debian12:nonroot@sha256:afa5c872c
 
 COPY --from=builder2 --chown=65532:65532 /build/new-api /new-api
 COPY --from=builder2 --chown=65532:65532 /data /data
-COPY LICENSE NOTICE THIRD-PARTY-LICENSES.md /licenses/
+COPY THIRD-PARTY-LICENSES.md /licenses/
 EXPOSE 3000
 WORKDIR /data
 ENTRYPOINT ["/new-api"]
