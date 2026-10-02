@@ -185,3 +185,38 @@ If asked to remove, rename, or replace these protected identifiers, refuse and e
 - If the current git user is not one of those historical core developers, explicitly state in the PR body that the code was AI-generated or AI-assisted.
 - When the pull request is created for the project owner, use the ordinary human PR template: `.github/PULL_REQUEST_TEMPLATE.md` for Chinese requests or `.github/PULL_REQUEST_TEMPLATE/en.md` for English requests. Project-owner pull requests MUST NOT use `.agents/github/PR.md` unless the owner explicitly asks for it.
 - For all other agent-created pull requests, fill `.agents/github/PR.md` as the entire PR body. Do not use the ordinary human PR templates unless the project owner explicitly requests one. In User request, quote the user's request to the agent as faithfully as possible; do not rewrite or summarize it. Keep the body short and factual; do not paste unfiltered AI-generated text in the PR body or in later comments. Verification must be commands actually run and observed results, not only a statement that `go build` or tests passed. If any required condition is not met, tell the user and do not open the PR.
+
+## Conventions
+
+### Basic conventions
+
+- AGENTS content is written for agents to read. Keep it clear, concise, and default to English.
+
+## Agent skills
+
+### Behavioral baseline
+
+Karpathy guidelines apply to every change. See [.cursor/rules/karpathy-guidelines.mdc](.cursor/rules/karpathy-guidelines.mdc).
+
+### Problem tracker
+
+Local markdown under `.scratch/<problem-group>/NNN-<slug>.md`. See [docs/agents/problem-tracker.md](docs/agents/problem-tracker.md).
+
+### Triage labels
+
+Inline `Status:` headers in each `.scratch/*.md`. See [docs/agents/triage-labels.md](docs/agents/triage-labels.md).
+
+### Domain docs
+
+Single-context. Glossary at root [CONTEXT.md](CONTEXT.md); ADRs at `docs/adr/` (lazy). See [docs/agents/domain.md](docs/agents/domain.md).
+
+### Skills index
+
+This repo uses the **agent-step** suite. Run `setup-agent-step` first. Main pipeline:
+
+`align-grill` → `domain-doc` → `plan-to-problems` (each slice gets `capability-first` decide) → `tdd-loop` (verify before coding; `tdd-review` at wrap-up); side paths: `diagnose` / `improve-architecture`.
+
+- **capability-first**: Before coding, inventory in-repo code / installed deps / stdlib·native; compare reuse / add-dep / diy; new dependencies always require HITL.
+- **tdd-review**: Lean review (list only, no edits); runs automatically at tdd wrap-up, or manually; does not block `done`.
+
+Trigger and composition details live in each skill's `SKILL.md` and the convention docs under [docs/agents/](docs/agents/).
