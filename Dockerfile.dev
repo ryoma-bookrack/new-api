@@ -3,7 +3,7 @@
 
 FROM golang:1.26.1-alpine AS builder
 
-ENV GO111MODULE=on CGO_ENABLED=0
+ENV GO111MODULE=on CGO_ENABLED=0 GOPROXY=https://goproxy.cn,direct GOSUMDB=sum.golang.google.cn
 ARG TARGETOS
 ARG TARGETARCH
 ENV GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64}
@@ -26,7 +26,11 @@ RUN go build -ldflags "-s -w -X 'github.com/QuantumNous/new-api/common.Version=$
 
 FROM debian:bookworm-slim
 
-RUN apt-get update \
+RUN sed -i \
+        -e 's|http://deb.debian.org/debian|http://mirrors.aliyun.com/debian|g' \
+        -e 's|http://security.debian.org/debian-security|http://mirrors.aliyun.com/debian-security|g' \
+        /etc/apt/sources.list.d/debian.sources \
+    && apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates tzdata wget \
     && rm -rf /var/lib/apt/lists/* \
     && update-ca-certificates
